@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { DesignViewStatus } from './status';
 
 export class DesignView {
     public static currentDesignView: DesignView | undefined;
@@ -53,6 +54,7 @@ export class DesignView {
     public dispose() {
         DesignView.currentDesignView = undefined;
         DesignView.currentDocument = undefined;
+        DesignViewStatus.isDesignViewActive = false;
 
         // Clean up our resources
         this._panel.dispose();
