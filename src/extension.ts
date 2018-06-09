@@ -1,27 +1,30 @@
 'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { DesignView } from './design-view';
+import { StatusBarIconController } from './statusbar-icon';
+import { DesignViewStatus } from './status';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    var iconController = new StatusBarIconController();
 
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "kekastudio" is now active!');
+    context.subscriptions.push(vscode.commands.registerCommand('kekastudio.openDesignView', () => {
+        DesignViewStatus.isDesignViewActive = true;
+        DesignView.createOrShow(context.extensionPath);
+    }));
 
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with  registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('extension.sayHello', () => {
-        // The code you place here will be executed every time your command is executed
+    context.subscriptions.push(vscode.commands.registerCommand('kekastudio.openCodeView', () => {
+        DesignViewStatus.isDesignViewActive = false;
+        var document = DesignView.getCurrentDocument();
+        vscode.window.showTextDocument(<vscode.TextDocument>document);
+    }));
+    
+    context.subscriptions.push(iconController);
 
-        // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World!');
-    });
+    vscode.window.onDidChangeActiveTextEditor(onTabSelectEvent);
+}
 
-    context.subscriptions.push(disposable);
+function onTabSelectEvent() {
+    DesignViewStatus.isDesignViewActive = DesignView.isDesignerActive;
 }
 
 // this method is called when your extension is deactivated
