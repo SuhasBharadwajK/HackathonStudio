@@ -4,10 +4,15 @@
         "target": "es6",
         "outDir": "out",
         "lib": [
-            "es6"
+            "es6",
+            "dom"
         ],
         "sourceMap": true,
         "rootDir": "src",
+        "moduleResolution": "node",
+        "typeRoots": [
+          "./node_modules/@types"
+        ],
         /* Strict Type-Checking Option */
         "strict": true,   /* enable all strict type-checking options */
         /* Additional Checks */
